@@ -10,26 +10,27 @@ const scene = new THREE.Scene();
 /**
  * Objects
  */
-const geometry = new THREE.BoxGeometry(1, 1, 1);
-const material = new THREE.MeshBasicMaterial({ color: 0xff0000 });
-const mesh = new THREE.Mesh(geometry, material);
-// mesh.position.x = 0.7;
-// mesh.position.y = -0.6;
-// mesh.position.z = 1;
-mesh.position.set(0.7,-0.6,1);
+const group = new THREE.Group();
+group.position.y = 1;
+group.scale.y = 2;
+group.rotation.y = 1;
+scene.add(group);
 
-//scale
-mesh.scale.y = 0.5;
+const cube1 = new THREE.Mesh(
+    new THREE.BoxGeometry(1,1,1),
+    new THREE.MeshBasicMaterial({color: 0xff0000})
+);
 
-//rotation
-mesh.rotation.reorder('YXZ');
-mesh.rotation.x = 0.5;
-mesh.rotation.y = 0.5;
+const cube2 = new THREE.Mesh(
+    new THREE.BoxGeometry(1,1,1),
+    new THREE.MeshBasicMaterial({color: 0x00ff00})
+);
 
+cube2.position.x = -2;
 
-scene.add(mesh);
+group.add(cube1);
+group.add(cube2);
 
-// console.log('distance between center of scene to object',mesh.position.length());
 
 /* Axis Healper */
 const axisHelper = new THREE.AxesHelper();
@@ -53,7 +54,7 @@ camera.position.z = 3;
 // camera.position.y = 1;
 scene.add(camera);
 
-console.log('distance between camera and cube ',mesh.position.distanceTo(camera.position));
+// console.log('distance between camera and cube ',mesh.position.distanceTo(camera.position));
 
 // You can normalize its values (meaning that you will reduce the length of the vector to 1 unit but preserve its direction)
 // mesh.position.normalize();
