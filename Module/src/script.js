@@ -1,5 +1,6 @@
 import './style.css';
 import * as THREE from 'three';
+import gsap from 'gsap';
 
 //scene
 const scene = new THREE.Scene();
@@ -32,16 +33,11 @@ renderer.setSize(sizes.width, sizes.height);
 
 let time = Date.now();
 
+gsap.to(mesh.position, {x : 2, duration: 1, delay : 1});
+gsap.to(mesh.position, {x : 0, duration: 1, delay : 2});
+
 // Animation
 const tick = () => {
-
-    const currentTime = Date.now();
-    const deltaTime = currentTime - time;
-    time = currentTime;
-
-    // Update Object
-    mesh.rotation.y += 0.001 * deltaTime;
-
     // Render
     renderer.render(scene, camera);
 
