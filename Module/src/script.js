@@ -1,16 +1,18 @@
 import "./style.css";
 import * as THREE from "three";
 import gsap from "gsap";
+import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls';
 
+const canvas = document.querySelector(".webgl");
 
 // Cursor
 const cursor = {
-    x : 0,
-    y: 0,
+  x: 0,
+  y: 0,
 };
-window.addEventListener('mousemove', (e) => {
-    cursor.x = e.clientX / sizes.width - 0.5
-    cursor.y = -(e.clientY / sizes.height - 0.5)
+window.addEventListener("mousemove", (e) => {
+  cursor.x = e.clientX / sizes.width - 0.5;
+  cursor.y = -(e.clientY / sizes.height - 0.5);
 });
 
 //scene
@@ -21,7 +23,7 @@ const geometry = new THREE.BoxGeometry(1, 1, 1);
 const material = new THREE.MeshBasicMaterial({ color: 0xff0000 });
 const mesh = new THREE.Mesh(geometry, material);
 const axis = new THREE.AxesHelper();
-scene.add(mesh,axis);
+scene.add(mesh, axis);
 
 //sizes
 const sizes = {
@@ -45,8 +47,12 @@ camera.position.z = 3;
 // camera.position.y = 1;
 scene.add(camera);
 
+//Controls
+const controls = new OrbitControls(camera, canvas);
+controls.enableDamping = true;
+
 //Render
-const canvas = document.querySelector(".webgl");
+
 const renderer = new THREE.WebGLRenderer({
   canvas,
 });
@@ -58,12 +64,13 @@ const tick = () => {
   renderer.render(scene, camera);
 
   //update camera
-  camera.position.x = Math.sin(cursor.x * Math.PI * 2)* 3;
-  camera.position.z = Math.cos(cursor.x * Math.PI * 2) * 3;
-  camera.position.y = cursor.y * 5;
-  camera.lookAt(mesh.position);
+  //   camera.position.x = Math.sin(cursor.x * Math.PI * 2)* 3;
+  //   camera.position.z = Math.cos(cursor.x * Math.PI * 2) * 3;
+  //   camera.position.y = cursor.y * 5;
+  //   camera.lookAt(mesh.position);
 
-//   mesh.rotation.y += 0.1;
+  //   mesh.rotation.y += 0.1;
+  controls.update();
 
   window.requestAnimationFrame(tick);
 };
