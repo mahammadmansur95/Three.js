@@ -27,24 +27,32 @@ scene.add(mesh, axis);
 
 //sizes
 const sizes = {
-  width: 800,
-  height: 600,
+  width: window.innerWidth,
+  height: window.innerHeight,
 };
+
+window.addEventListener('resize', () => {
+  sizes.width = window.innerWidth;
+  sizes.height = window.innerHeight;
+
+  camera.aspect = sizes.width / sizes.height;
+  camera.updateProjectionMatrix();
+
+  renderer.setSize(sizes.width, sizes.height);
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
+});
+
+window.addEventListener('dblclick', () => {
+  if(!document.fullscreenElement){
+    canvas.requestFullscreen();
+  } else {
+    document.exitFullscreen();
+  }
+});
 
 //camera
 const camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.height);
-// const aspectRation = sizes.width / sizes.height;
-// const camera = new THREE.OrthographicCamera(
-//   -1 * aspectRation,
-//   1 * aspectRation,
-//   1,
-//   -1,
-//   0.1,
-//   100
-// );
 camera.position.z = 3;
-// camera.position.x = 1;
-// camera.position.y = 1;
 scene.add(camera);
 
 //Controls
@@ -57,19 +65,12 @@ const renderer = new THREE.WebGLRenderer({
   canvas,
 });
 renderer.setSize(sizes.width, sizes.height);
+renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
 
 // Animation
 const tick = () => {
   // Render
   renderer.render(scene, camera);
-
-  //update camera
-  //   camera.position.x = Math.sin(cursor.x * Math.PI * 2)* 3;
-  //   camera.position.z = Math.cos(cursor.x * Math.PI * 2) * 3;
-  //   camera.position.y = cursor.y * 5;
-  //   camera.lookAt(mesh.position);
-
-  //   mesh.rotation.y += 0.1;
   controls.update();
 
   window.requestAnimationFrame(tick);
