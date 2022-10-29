@@ -1,63 +1,59 @@
-import './style.css';
-import * as THREE from 'three';
-
-// Canvas
-const canvas = document.querySelector('canvas.webgl');
-
-// Scene
-const scene = new THREE.Scene();
+import './style.css'
+import * as THREE from 'three'
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
+import gsap from 'gsap'
 
 /**
- * Objects
+ * Base
  */
-const group = new THREE.Group();
-group.position.y = 1;
-group.scale.y = 2;
-group.rotation.y = 1;
-scene.add(group);
+// Canvas
+const canvas = document.querySelector('canvas.webgl')
 
-const cube1 = new THREE.Mesh(
-    new THREE.BoxGeometry(1,1,1),
-    new THREE.MeshBasicMaterial({color: 0xff0000})
-);
+// Scene
+const scene = new THREE.Scene()
 
-const cube2 = new THREE.Mesh(
-    new THREE.BoxGeometry(1,1,1),
-    new THREE.MeshBasicMaterial({color: 0x00ff00})
-);
-
-cube2.position.x = -2;
-
-group.add(cube1);
-group.add(cube2);
-
-
-/* Axis Healper */
-const axisHelper = new THREE.AxesHelper();
-scene.add(axisHelper);
-
+/**
+ * Object
+ */
+const geometry = new THREE.BoxGeometry(1, 1, 1)
+const material = new THREE.MeshBasicMaterial({ color: 0xff0000 })
+const mesh = new THREE.Mesh(geometry, material)
+scene.add(mesh)
 
 /**
  * Sizes
  */
 const sizes = {
-    width: 800,
-    height: 600
+    width: window.innerWidth,
+    height: window.innerHeight
 }
+
+window.addEventListener('resize', () =>
+{
+    // Update sizes
+    sizes.width = window.innerWidth
+    sizes.height = window.innerHeight
+
+    // Update camera
+    camera.aspect = sizes.width / sizes.height
+    camera.updateProjectionMatrix()
+
+    // Update renderer
+    renderer.setSize(sizes.width, sizes.height)
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
+})
 
 /**
  * Camera
  */
-const camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.height)
-camera.position.z = 3;
-// camera.position.x = 1;
-// camera.position.y = 1;
-scene.add(camera);
+// Base camera
+const camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.height, 0.1, 100)
+camera.position.z = 3
+scene.add(camera)
 
-// console.log('distance between camera and cube ',mesh.position.distanceTo(camera.position));
-
-// You can normalize its values (meaning that you will reduce the length of the vector to 1 unit but preserve its direction)
-// mesh.position.normalize();
+// Controls
+const controls = new OrbitControls(camera, canvas)
+controls.enableDamping = true
 
 /**
  * Renderer
@@ -66,4 +62,25 @@ const renderer = new THREE.WebGLRenderer({
     canvas: canvas
 })
 renderer.setSize(sizes.width, sizes.height)
-renderer.render(scene, camera)
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
+
+/**
+ * Animate
+ */
+const clock = new THREE.Clock()
+
+const tick = () =>
+{
+    const elapsedTime = clock.getElapsedTime()
+
+    // Update controls
+    controls.update()
+
+    // Render
+    renderer.render(scene, camera)
+
+    // Call tick again on the next frame
+    window.requestAnimationFrame(tick)
+}
+
+tick()
