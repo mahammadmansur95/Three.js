@@ -59,12 +59,20 @@ const canvas = document.querySelector("canvas.webgl");
 const scene = new THREE.Scene();
 
 /**
- * Object
- */
-const geometry = new THREE.BoxGeometry(1, 1, 1);
-const material = new THREE.MeshBasicMaterial({ map: colorTexture });
-const mesh = new THREE.Mesh(geometry, material);
-scene.add(mesh);
+ * Objects 
+*/
+
+const material = new THREE.MeshBasicMaterial();
+
+const sphere = new THREE.Mesh(new THREE.SphereGeometry(0.5, 16, 16), material);
+sphere.position.x = -1.5;
+
+const plane = new THREE.Mesh(new THREE.PlaneGeometry(1,1), material);
+
+const torus = new THREE.Mesh(new THREE.TorusGeometry(0.3, 0.2, 16, 32),material);
+torus.position.x = 1.5;
+
+scene.add(sphere, plane, torus);
 
 /**
  * Sizes
@@ -92,14 +100,11 @@ window.addEventListener("resize", () => {
  * Camera
  */
 // Base camera
-const camera = new THREE.PerspectiveCamera(
-  75,
-  sizes.width / sizes.height,
-  0.1,
-  100
-);
-camera.position.z = 3;
-scene.add(camera);
+const camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.height, 0.1, 100)
+camera.position.x = 1
+camera.position.y = 1
+camera.position.z = 2
+scene.add(camera)
 
 // Controls
 const controls = new OrbitControls(camera, canvas);
@@ -122,8 +127,17 @@ const clock = new THREE.Clock();
 const tick = () => {
   const elapsedTime = clock.getElapsedTime();
 
-  // Update controls
-  controls.update();
+    // Update objects
+    sphere.rotation.y = 0.1 * elapsedTime;
+    plane.rotation.y = 0.1 * elapsedTime;
+    torus.rotation.y = 0.1 * elapsedTime;
+
+    sphere.rotation.x = 0.1 * elapsedTime;
+    plane.rotation.x = 0.1 * elapsedTime;
+    torus.rotation.x = 0.1 * elapsedTime;
+
+    // Update controls
+    controls.update()
 
   // Render
   renderer.render(scene, camera);
