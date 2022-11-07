@@ -34,18 +34,9 @@ const ambientOcclusionTexture = textureLoader.load(
 );
 const metalnessTexture = textureLoader.load("/textures/door/metalness.jpg");
 const roughnessTexture = textureLoader.load("/textures/door/roughness.jpg");
+const matcapTexture = textureLoader.load('/textures/matcaps/1.png');
+const gradientTexture = textureLoader.load('/textures/gradients/3.jpg');
 
-// colorTexture.repeat.x = 2;
-// colorTexture.repeat.y = 3;
-// colorTexture.wrapS = THREE.RepeatWrapping;
-// colorTexture.wrapT = THREE.RepeatWrapping;
-
-// colorTexture.offset.x = 0.5;
-// colorTexture.offset.y = 0.5;
-
-// colorTexture.rotation = Math.PI / 4;
-// colorTexture.center.x = 0.5;
-// colorTexture.center.y = 0.5;
 
 colorTexture.minFilter = THREE.NearestFilter;
 
@@ -62,7 +53,38 @@ const scene = new THREE.Scene();
  * Objects 
 */
 
-const material = new THREE.MeshBasicMaterial();
+// const material = new THREE.MeshBasicMaterial();
+//it fills the given color/image on the material
+// material.map = colorTexture;
+// material.color = new THREE.Color('green');
+// material.wireframe = true;
+// material.opacity = 0.5;
+// material.transparent = true;
+// material.alphaMap = alphaTexture;
+// material.side = THREE.DoubleSide;
+
+// const material = new THREE.MeshNormalMaterial();
+//it can be used for lighting, reflection,refraction;
+// material.flatShading = true;
+
+// const material = new THREE.MeshMatcapMaterial();
+// //it needs a reference texture that looks like a sphere
+// material.matcap = matcapTexture;
+
+// const material = new THREE.MeshDepthMaterial();
+//scary night effect
+
+// const material = new THREE.MeshLambertMaterial();
+
+// const material = new THREE.MeshPhongMaterial();
+// material.shininess = 100;
+// material.specular = new THREE.Color('red');
+
+// const material = new THREE.MeshToonMaterial();
+
+const material = new THREE.MeshStandardMaterial();
+material.metalness = 0.45
+material.metalness = 0.45
 
 const sphere = new THREE.Mesh(new THREE.SphereGeometry(0.5, 16, 16), material);
 sphere.position.x = -1.5;
@@ -73,6 +95,18 @@ const torus = new THREE.Mesh(new THREE.TorusGeometry(0.3, 0.2, 16, 32),material)
 torus.position.x = 1.5;
 
 scene.add(sphere, plane, torus);
+
+/**
+ * Lights
+*/
+const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+scene.add(ambientLight);
+
+const pointLight = new THREE.PointLight(0xffffff, 0.5);
+pointLight.position.x = 2;
+pointLight.position.y = 3;
+pointLight.position.z = 4;
+scene.add(pointLight);
 
 /**
  * Sizes
